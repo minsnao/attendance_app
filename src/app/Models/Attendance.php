@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\BreakTime;
+use App\Models\AttendanceRequest;
 
 
 class Attendance extends Model
@@ -18,6 +19,11 @@ class Attendance extends Model
         'status',
     ];
 
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
+    ];
+
     public function user() {
         return $this->belongsTo(User::class);
     }
@@ -25,11 +31,10 @@ class Attendance extends Model
     public function breakTimes() {
         return $this->hasMany(BreakTime::class);
     }
-
-    protected $casts = [
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
-    ];
+    
+    public function requests() {
+        return $this->hasMany(AttendanceRequest::class);
+    }
 
     public function getTotalBreakMinutesAttribute()
     {

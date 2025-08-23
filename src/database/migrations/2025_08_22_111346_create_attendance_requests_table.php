@@ -21,6 +21,7 @@ class CreateAttendanceRequestsTable extends Migration
             $table->time('requested_end_time')->nullable();
             $table->json('requested_breaks')->nullable();
             $table->enum('status', ['requested', 'approved'])->default('requested');
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

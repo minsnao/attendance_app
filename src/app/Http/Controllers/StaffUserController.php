@@ -49,18 +49,4 @@ class StaffUserController extends Controller
             'nextMonth' => $nextMonthDate->month,
         ]);
     }
-
-    /*  仮
-    public function show(User $user, Request $request) {
-        $year = $request->input('year', now()->year);
-        $month = $request->input('month', now()->month);
-
-        $start = Carbon::create($year, $month, 1)->startOfMonth();
-        $end = Carbon::create($year, $month, 1)->endOfMonth()->endOfDay();
-
-        $attendances = Attendance::where('user_id', $user->id)->whereBetween('start_time', [$start, $end])->orderBy('start_time')->get();
-
-        return view('admin.staff_attendances_list', compact('user', 'attendances', 'year', 'month'));
-    }
-    */
 }

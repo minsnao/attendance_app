@@ -45,6 +45,7 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
 // 管理者のみ
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/attendances', [AttendanceListController::class, 'index']);
+    Route::get('/admin/attendances/{attendance?}', [AttendanceListController::class, 'edit']);
 
     Route::get('/admin/users', [StaffUserController::class, 'index']);
     Route::get('/admin/users/{user}/attendances', [StaffUserController::class, 'show']);

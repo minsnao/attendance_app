@@ -1,12 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<a href="/admin/login">admin login</a>
-<a href="/login">login</a>
 
-<h2>attendance</h2>
+<h1>勤怠</h1>
 
-<h1>{{ $user->name }}さんの勤怠ページ</h1>
+<h2>{{ $user->name }}さんの勤怠ページ</h2>
 
 <br><br><br>
 

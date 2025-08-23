@@ -54,7 +54,7 @@
         <td>
             @if ($attendance && $attendance->start_time && $attendance->end_time)
             @php
-            $totalMinutes = \Carbon\Carbon::parse($attendance->end_time)->diffInMinutes($attendance->start_time);
+            $totalMinutes = \Carbon\Carbon::parse($attendance->end_time)->diffInMinutes(\Carbon\Carbon::parse($attendance->start_time));
             $totalBreakMinutes = $attendance->breakTimes->sum(function ($break) {
                 return $break->start_time && $break->end_time ? \Carbon\Carbon::parse($break->end_time)->diffInMinutes($break->start_time) : 0;
             });
@@ -64,9 +64,7 @@
             @endif
         </td>
         <td>
-            @if ($attendance)
-            <a href="/attendance/detail/{{ $attendance->id }}">詳細</a>
-            @endif
+            <a href="{{ url('/admin/attendances' . ($attendance ? '/' . $attendance->id : '') . '?date=' . $day['date']) }}">詳細</a>
         </td>
     </tr>
     @endforeach

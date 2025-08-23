@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Attendance;
 use App\Models\BreakTime;
+use App\Models\AttendanceRequest;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
@@ -189,16 +190,24 @@ class AttendanceController extends Controller
             $attendance->load('breakTimes');
         }
 
-        return view('attendance_edit', compact('attendance'));
+        $existingRequest = $attendance->requests()->where('status', 'requested')->first();
+
+        return view('attendance_edit', compact('attendance','existingRequest'));
     }
+
 
     public function requestUpdate(Request $request, $id)
     {
         $user = Auth::user();
-
         $attendance = Attendance::where('id', $id)->where('user_id', $user->id)->firstOrFail();
-
-        $requestedBreaks = $request->input('requested_breaks', []); 
+        
+        $requestedBreaks = $request->input('breaks', []);
+        $requestedBreaks = array_map(function($b){
+            return [
+                'start_time' => $b['start_time'] ?? '',
+                'end_time' => $b['end_time'] ?? '',
+            ];
+        }, $requestedBreaks);
 
         $existingRequest = $attendance->requests()->where('status', 'requested')->first();
         if (!$existingRequest) {
@@ -210,7 +219,7 @@ class AttendanceController extends Controller
                 'status' => 'requested',
             ]);
         }
-        return back();
+        return redirect()->back();
     }
 
     public function approveRequest($id)
@@ -261,7 +270,7 @@ class AttendanceController extends Controller
 
     public function appry()
     {
-        $requests = Attendance::with('attendance', 'user')->where('status', 'requested')->latest()->get();
+        $requests = AttendanceRequest::with('attendance', 'user')->where('status', 'requested')->where('user_id', auth()->id())->latest()->get();
 
         return view('requests_list', compact('requests'));
     }

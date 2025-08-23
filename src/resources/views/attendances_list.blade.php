@@ -58,7 +58,7 @@
             @endphp
         </td>
         <td>
-        <a href="/attendance/detail{{ $attendance ? '/' . $attendance->id : '' }}?date={{ $date }}">詳細</a>
+            <a href="/attendance/detail{{ $attendance ? '/' . $attendance->id : '' }}?date={{ $date }}">詳細</a>
         </td>
     </tr>
     @endforeach

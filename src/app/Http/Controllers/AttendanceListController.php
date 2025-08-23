@@ -11,8 +11,13 @@ class AttendanceListController extends Controller
         return view('admin.attendances_list');
     }
 
-        public function edit() 
+    //public function show() 
+    //{
+    //    return view('admin.admin_attendances_edit');
+    //}
+
+    public function edit() 
     {
-        return view('admin.admin_attendances_edit');
+        return view('admin.admin_attendance_edit');
     }
 }
