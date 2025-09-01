@@ -9,12 +9,13 @@ class AttendanceRequest extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'Attendance_id',
+        'attendance_id',
         'user_id',
         'requested_start_time',
         'requested_end_time',
         'requested_breaks',
         'status',
+        //'remarks',
     ];
 
     protected $casts = [

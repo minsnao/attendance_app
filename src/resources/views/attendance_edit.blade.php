@@ -24,6 +24,7 @@
     <h4>休憩時間</h4>
     <div id="break-request-list">
         @php
+        dd($existingRequest);
         if ($existingRequest && $existingRequest->requested_breaks) {
             $breaks = $existingRequest->requested_breaks;
             if (!is_array($breaks) || empty($breaks)) {

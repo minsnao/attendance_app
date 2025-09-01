@@ -29,10 +29,10 @@ class UserSeeder extends Seeder
         // テスト用従業員
         $users =[
             ['name' => '太 太郎', 'email' => 'aa@a.a', 'password' => 'aaaaaaaa'],
-            ['name' => '太 郎太', 'email' => 'dd@d.d', 'password' => 'dddddddd'],
-            ['name' => '郎 太太', 'email' => 'ee@e.e', 'password' => 'eeeeeeee'],
-            ['name' => '太太 郎', 'email' => 'cc@c.c', 'password' => 'cccccccc'],
-            ['name' => '太郎 太', 'email' => 'bb@b.b', 'password' => 'bbbbbbbb'],
+            ['name' => '太 郎太', 'email' => 'bb@b.b', 'password' => 'bbbbbbbb'],
+            ['name' => '郎 太太', 'email' => 'cc@c.c', 'password' => 'cccccccc'],
+            ['name' => '太太 郎', 'email' => 'dd@d.d', 'password' => 'dddddddd'],
+            ['name' => '太郎 太', 'email' => 'ee@e.e', 'password' => 'eeeeeeee'],
             ['name' => '郎太 太', 'email' => 'ff@f.f', 'password' => 'ffffffff'],
         ];
 

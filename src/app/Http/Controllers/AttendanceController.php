@@ -154,7 +154,7 @@ class AttendanceController extends Controller
         $dateString = $date->toDateString();
         $days[] = [
             'date' => $dateString,
-            'attendance' => $attendances->get($dateString), // 出勤していない日は null
+            'attendance' => $attendances->get($dateString),
             ];
         }
 
@@ -202,6 +202,8 @@ class AttendanceController extends Controller
         $attendance = Attendance::where('id', $id)->where('user_id', $user->id)->firstOrFail();
         
         $requestedBreaks = $request->input('breaks', []);
+
+        dd($requestedBreaks);
         $requestedBreaks = array_map(function($b){
             return [
                 'start_time' => $b['start_time'] ?? '',
@@ -210,16 +212,20 @@ class AttendanceController extends Controller
         }, $requestedBreaks);
 
         $existingRequest = $attendance->requests()->where('status', 'requested')->first();
+
         if (!$existingRequest) {
             $attendance->requests()->create([
+                'attendance_id' => $attendance->id,
                 'user_id' => $user->id,
                 'requested_start_time' => $request->input('requested_start_time'),
                 'requested_end_time' => $request->input('requested_end_time'),
-                'requested_breaks' => json_encode($requestedBreaks),
+                'requested_breaks' => $requestedBreaks,
                 'status' => 'requested',
+                //'remarks' => $request->input('remarks', null),
             ]);
         }
-        return redirect()->back();
+        
+        return view('attendance.edit', compact('attendance', 'existingRequest'));
     }
 
     public function approveRequest($id)
