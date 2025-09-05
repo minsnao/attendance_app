@@ -39,19 +39,21 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::get('/attendance/list', [AttendanceController::class, 'show']);
     Route::get('/attendance/detail/{id?}', [AttendanceController::class, 'edit']);
     Route::post('/attendance/request-update/{id?}', [AttendanceController::class, 'requestUpdate']);
-    Route::get('/stamp-correction-request/list', [AttendanceController::class, 'appry']);
+    Route::get('/stamp-correction-request/list', [AttendanceController::class, 'myRequests']);
 });
 
 // 管理者のみ
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/attendances', [AttendanceListController::class, 'index']);
     Route::get('/admin/attendances/{attendance?}', [AttendanceListController::class, 'edit']);
+    Route::put('/admin/attendances/{attendance}', [AttendanceListController::class, 'update']);
 
     Route::get('/admin/users', [StaffUserController::class, 'index']);
     Route::get('/admin/users/{user}/attendances', [StaffUserController::class, 'show']);
 
     Route::get('/admin/requests', [ShowRequestsController::class, 'index']);
     Route::get('/admin/requests/{id}', [ShowRequestsController::class, 'show']);
+    Route::post('/admin/requests/{id}/approve', [ShowRequestsController::class, 'approve']);
 });
 
 // Fortify準拠による設定で "/" はログインフォームへ

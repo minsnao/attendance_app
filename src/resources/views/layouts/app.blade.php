@@ -21,23 +21,22 @@
                 </a>
             </div>
             <div class="header__right"> 
-                <!-- 後でここに管理者用と一般でタグを分ける＝＞ロール処理 -->
                 @auth
-                @if (!request()->is('login', 'register', 'admin/login'))          
-                @if (Auth::user()->role === 'admin')
-                <a href="/admin/attendances" class="nav-link">勤怠一覧</a>
-                <a href="/admin/users/" class="nav-link">スタッフ一覧</a>
-                <a href="/admin/requests/{id}" class="nav-link">申請一覧</a>
-                @elseif (Auth::user()->role === 'employee')
-                <a href="/attendance" class="nav-link">勤怠</a>
-                <a href="/attendance/list" class="nav-link">勤怠一覧</a>
-                <a href="/stamp-correction-request/list" class="nav-link">申請</a>
-                @endif
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit">ログアウト</button>
-                </form>                
-                @endif
+                    @if (!request()->is('login', 'register', 'admin/login'))          
+                        @if (Auth::user()->role === 'admin')
+                            <a href="/admin/attendances" class="nav-link">勤怠一覧</a>
+                            <a href="/admin/users/" class="nav-link">スタッフ一覧</a>
+                            <a href="/admin/requests/" class="nav-link">申請一覧</a>
+                        @elseif (Auth::user()->role === 'employee')
+                            <a href="/attendance" class="nav-link">勤怠</a>
+                            <a href="/attendance/list" class="nav-link">勤怠一覧</a>
+                            <a href="/stamp-correction-request/list" class="nav-link">申請</a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit">ログアウト</button>
+                        </form>                
+                    @endif
                 @endauth
             </div>
         </div>

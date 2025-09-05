@@ -142,7 +142,7 @@ class AttendanceController extends Controller
         $year = $request->input('year', now()->year);
         $month = $request->input('month', now()->month);
 
-        $attendances = Attendance::where('user_id', $user->id)->whereYear('start_time', $year)->whereMonth('start_time', $month)->get()->keyBy(function ($attendance) {
+        $attendances = Attendance::where('user_id', $user->id)->whereYear('start_time', $year)->whereMonth('start_time', $month)->with('breakTimes')->get()->keyBy(function ($attendance) {
             return \Carbon\Carbon::parse($attendance->start_time)->toDateString();
         });
 
@@ -190,7 +190,7 @@ class AttendanceController extends Controller
             $attendance->load('breakTimes');
         }
 
-        $existingRequest = $attendance->requests()->where('status', 'requested')->first();
+        $existingRequest = $attendance->requests()->whereIn('status', ['requested', 'approved'])->latest()->first();
 
         return view('attendance_edit', compact('attendance','existingRequest'));
     }
@@ -203,7 +203,6 @@ class AttendanceController extends Controller
         
         $requestedBreaks = $request->input('breaks', []);
 
-        dd($requestedBreaks);
         $requestedBreaks = array_map(function($b){
             return [
                 'start_time' => $b['start_time'] ?? '',
@@ -221,11 +220,11 @@ class AttendanceController extends Controller
                 'requested_end_time' => $request->input('requested_end_time'),
                 'requested_breaks' => $requestedBreaks,
                 'status' => 'requested',
-                //'remarks' => $request->input('remarks', null),
+                'remarks' => $request->input('remarks', null),
             ]);
         }
         
-        return view('attendance.edit', compact('attendance', 'existingRequest'));
+        return redirect()->back();
     }
 
     public function approveRequest($id)
@@ -274,9 +273,9 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function appry()
+    public function myRequests()
     {
-        $requests = AttendanceRequest::with('attendance', 'user')->where('status', 'requested')->where('user_id', auth()->id())->latest()->get();
+        $requests = AttendanceRequest::with('attendance', 'user')->where('user_id', auth()->id())->latest()->get();
 
         return view('requests_list', compact('requests'));
     }

@@ -32,6 +32,6 @@
 
 
     <!-- 開発用 -->
-    <br><br><br><br><br><br><br><br><br><br><br><a href="/admin/login">admin</a>
+    <br><br><br><br><br><br><br><br><br><a href="/admin/login">admin</a>
 </div>
 @endsection

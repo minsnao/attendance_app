@@ -17,6 +17,7 @@ class Attendance extends Model
         'start_time', 
         'end_time',
         'status',
+        'remarks',
     ];
 
     protected $casts = [

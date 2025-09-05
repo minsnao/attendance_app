@@ -15,7 +15,7 @@ class AttendanceRequest extends Model
         'requested_end_time',
         'requested_breaks',
         'status',
-        //'remarks',
+        'remarks',
     ];
 
     protected $casts = [

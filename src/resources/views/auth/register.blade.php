@@ -14,7 +14,6 @@
     <h2>会員登録</h2>
     <form method="POST" action="{{ route('register') }}">
         @csrf
-
         <div class="form__group">
             <label for="name">ユーザー</label>
             <input type="text" name="name" value="{{ old('name') }}">
@@ -37,5 +36,4 @@
     </form>
     <a href="{{ route('login') }}" class="other__btn">ログインはこちら</a>
 </div>
-
 @endsection

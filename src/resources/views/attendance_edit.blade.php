@@ -7,37 +7,38 @@
     <p>名前: {{ $attendance->user->name }}</p>
     <p>日付: {{ $attendance->start_time ? $attendance->start_time->format('Y年m月d日') : ($attendance->date ?? '') }}</p>
 
+    @php
+        $readonly = $existingRequest && in_array($existingRequest->status, ['requested', 'approved']);
+    @endphp
+
     <label>出勤時間:
        <input type="time" name="requested_start_time"
        value="{{ $existingRequest ? \Carbon\Carbon::parse($existingRequest->requested_start_time)->format('H:i') : ($attendance->start_time ? $attendance->start_time->format('H:i') : '') }}"
-       {{ $existingRequest ? 'readonly' : '' }}>
-    </label>
-    <br>
+       {{ $readonly ? 'readonly' : '' }}>
+    </label><br>
 
     <label>退勤時間:
         <input type="time" name="requested_end_time"
        value="{{ $existingRequest ? \Carbon\Carbon::parse($existingRequest->requested_end_time)->format('H:i') : ($attendance->end_time ? $attendance->end_time->format('H:i') : '') }}"
-       {{ $existingRequest ? 'readonly' : '' }}>
-    </label>
-    <br>
+       {{ $readonly ? 'readonly' : '' }}>
+    </label><br>
     
     <h4>休憩時間</h4>
     <div id="break-request-list">
         @php
-        dd($existingRequest);
-        if ($existingRequest && $existingRequest->requested_breaks) {
-            $breaks = $existingRequest->requested_breaks;
-            if (!is_array($breaks) || empty($breaks)) {
-                $breaks = [['start_time'=>'','end_time'=>'']];
+            if ($existingRequest && $existingRequest->requested_breaks) {
+                $breaks = $existingRequest->requested_breaks;
+                if (!is_array($breaks) || empty($breaks)) {
+                    $breaks = [['start_time'=>'','end_time'=>'']];
+                }
+            } else {
+                $breaks = $attendance->breakTimes->isNotEmpty() ? $attendance->breakTimes->map(function($b) {
+                    return [
+                        'start_time' => $b->start_time ? $b->start_time->format('H:i') : '',
+                        'end_time' => $b->end_time ? $b->end_time->format('H:i') : ''
+                    ];
+                })->toArray() : [['start_time'=>'','end_time'=>'']];
             }
-        } else {
-            $breaks = $attendance->breakTimes->isNotEmpty() ? $attendance->breakTimes->map(function($b) {
-                return [
-                    'start_time' => $b->start_time ? $b->start_time->format('H:i') : '',
-                    'end_time' => $b->end_time ? $b->end_time->format('H:i') : ''
-                ];
-            })->toArray() : [['start_time'=>'','end_time'=>'']];
-        }
         @endphp
 
         @foreach($breaks as $index => $break)
@@ -46,21 +47,30 @@
                 <input type="time"
                     name="breaks[{{ $index }}][start_time]"
                     value="{{ $break['start_time'] ?? '' }}"
-                    {{ $existingRequest ? 'readonly' : '' }}>
+                    {{ $readonly ? 'readonly' : '' }}>
                 ～
                 <input type="time"
                     name="breaks[{{ $index }}][end_time]"
                     value="{{ $break['end_time'] ?? '' }}"
-                    {{ $existingRequest ? 'readonly' : '' }}>
-                @if(!$existingRequest)
+                    {{ $readonly ? 'readonly' : '' }}>
+                @if(!$readonly)
                     <button type="button" class="delete-break-btn">削除</button>
                 @endif
             </div>
         @endforeach
+
+        <label for="remarks">備考</label>
+        <textarea name="remarks" {{ $readonly ? 'readonly' : '' }}>
+            {{ old('remarks', $existingRequest ? $existingRequest->remarks : ($attendance->remarks ?? '')) }}
+        </textarea>
     </div>
-    @if(!$existingRequest)
-    <button type="button" id="add-break-btn">休憩追加</button><br>
-    <button type="submit">修正申請を送信</button>
+    @if($readonly)
+        <button type="button" disabled>
+            {{ $existingRequest->status === 'requested' ? '申請中' : '承諾済み' }}
+        </button>
+    @else
+        <button type="button" id="add-break-btn">休憩追加</button><br>
+        <button type="submit">修正申請を送信</button>
     @endif
 </form>
 

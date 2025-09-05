@@ -23,44 +23,63 @@
     </tr>
 
     @foreach ($days as $day)
-    @php
-    $attendance = $day['attendance'];
-    $date = $day['date'];
-    @endphp
-    <tr>
-        <td>
-            {{ $day['date'] }}
-        </td>
+        @php
+            $attendance = $day['attendance'];
+            $date = $day['date'];
+        @endphp
+        <tr>
+            <td>
+                {{ $day['date'] }}
+            </td>
 
-        <td>
-            {{ $attendance && $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '' }}
-        </td>
+            <td>
+                {{ $attendance && $attendance->start_time ? \Carbon\Carbon::parse($attendance->start_time)->format('H:i') : '' }}
+            </td>
 
-        <td>
-            {{ $attendance && $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '' }}
-        </td>
+            <td>
+                {{ $attendance && $attendance->end_time ? \Carbon\Carbon::parse($attendance->end_time)->format('H:i') : '' }}
+            </td>
 
-        <td>
-            @php
-            $totalBreakMinutes = $attendance ? $attendance->breakTimes->sum(function ($break) {
-                return $break->start_time && $break->end_time ? \Carbon\Carbon::parse($break->end_time)->diffInMinutes($break->start_time) : 0;
-                }) : 0;
-            echo $totalBreakMinutes > 0 ? floor($totalBreakMinutes / 60) . '時間' . ($totalBreakMinutes % 60) . '分' : '';
-            @endphp
-        </td>
+            <td>
+                @php
+                    $totalBreakMinutes = 0;
+                    if ($attendance && $attendance->breakTimes->isNotEmpty()) {
+                        $totalBreakMinutes = $attendance->breakTimes->sum(function ($break) {
+                            return $break->start_time && $break->end_time ? \Carbon\Carbon::parse($break->end_time)->diffInMinutes($break->start_time) : 0;
+                        });
+                    }
+                @endphp
+                @if($attendance && $attendance->breakTimes->isNotEmpty())
+                    @php
+                        $totalBreakMinutes = $attendance ? $attendance->breakTimes->sum(function ($break) {
+                            return $break->start_time && $break->end_time ? \Carbon\Carbon::parse($break->end_time)->diffInMinutes($break->start_time) : 0;
+                        }) : 0;
+                        $hours = floor($totalBreakMinutes / 60);
+                        $minutes = $totalBreakMinutes % 60;
+                        echo sprintf('%d:%02d', $hours, $minutes);
+                    @endphp
+                @elseif($attendance)
+                    - {{-- 出勤あり∧休憩なし --}}
+                @else
+                    {{-- 未出勤時表示無し --}}
+                @endif
+            </td>
 
-        <td>
-            @php
-            if ($attendance && $attendance->start_time && $attendance->end_time) {
-                $totalMinutes = \Carbon\Carbon::parse($attendance->end_time)->diffInMinutes($attendance->start_time) - $totalBreakMinutes;
-                echo floor($totalMinutes / 60) . '時間' . ($totalMinutes % 60) . '分';
-            }
-            @endphp
-        </td>
-        <td>
-            <a href="/attendance/detail{{ $attendance ? '/' . $attendance->id : '' }}?date={{ $date }}">詳細</a>
-        </td>
-    </tr>
+            <td>
+                
+                @php
+                    if ($attendance && $attendance->start_time && $attendance->end_time) {
+                        $totalMinutes = \Carbon\Carbon::parse($attendance->end_time)->diffInMinutes($attendance->start_time) - $totalBreakMinutes;
+                        $hours = floor($totalMinutes / 60);
+                        $minutes = $totalMinutes % 60;
+                        echo sprintf('%d:%02d', $hours, $minutes);
+                    }
+                @endphp
+            </td>
+            <td>
+                <a href="/attendance/detail{{ $attendance ? '/' . $attendance->id : '' }}?date={{ $date }}">詳細</a>
+            </td>
+        </tr>
     @endforeach
 </table>
 
