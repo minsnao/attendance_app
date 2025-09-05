@@ -24,9 +24,11 @@ class StoreAttendanceRequest extends FormRequest
     public function rules()
     {
         return [
-            'start_time' => ['required', 'date_format:H:i'],
-            'end_time'   => ['required', 'date_format:H:i', 'after:start_time'],
+            'start_time' => ['nullable', 'date_format:H:i'],
+            'end_time'   => ['nullable', 'date_format:H:i', 'after:start_time'],
             'remarks'    => ['required', 'string', 'max:255'],
+            // start_time, end_time に reqiredにするとデータはあるがなぜかはじかれる
+            // 要追及箇所
 
             'breaks' => ['array'],
             'breaks.*.start_time' => ['nullable', 'date_format:H:i', 'after_or_equal:start_time', 'before:end_time'],
