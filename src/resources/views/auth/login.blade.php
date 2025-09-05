@@ -27,11 +27,5 @@
         </div>
     </form>
     <a href="{{ route('register') }}" class="other__btn">会員登録はこちら</a>
-
-
-
-
-    <!-- 開発用 -->
-    <br><br><br><br><br><br><br><br><br><a href="/admin/login">admin</a>
 </div>
 @endsection
