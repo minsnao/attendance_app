@@ -45,7 +45,7 @@ Docker:28.3.2
 VScode:1.103.1  
 
 ## ER図
-ー  
+![alt text](attendance_app.png)  
 
 ## URL
 開発環境 : http://localhost/  
