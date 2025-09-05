@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use Illuminate\Http\Request;
+use App\Http\Requests\UpdateAttendanceRequest;
 
 class AttendanceListController extends Controller
 {
@@ -29,7 +30,7 @@ class AttendanceListController extends Controller
         return view('admin.admin_attendance_edit', compact('attendance'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateAttendanceRequest $request, $id)
     {
         $attendance = Attendance::findOrFail($id);
 

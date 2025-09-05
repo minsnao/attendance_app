@@ -2,6 +2,16 @@
 
 @section('content')
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <h1>勤怠編集（管理者用）</h1>
 
 <p>名前: {{ $attendance->user->name }}</p>

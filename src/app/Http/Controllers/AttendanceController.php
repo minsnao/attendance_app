@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\AttendanceRequest;
+use App\Http\Requests\StoreAttendanceRequest;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
@@ -196,7 +197,7 @@ class AttendanceController extends Controller
     }
 
 
-    public function requestUpdate(Request $request, $id)
+    public function requestUpdate(StoreAttendanceRequest $request, $id)
     {
         $user = Auth::user();
         $attendance = Attendance::where('id', $id)->where('user_id', $user->id)->firstOrFail();
