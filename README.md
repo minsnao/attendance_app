@@ -1,13 +1,14 @@
 # attendance_app
+勤怠管理アプリ
 
 ## 環境構築
 ①クローンするフォルダを置くディレクトリにコマンドを実行  
-git clone git@github.com:(user_name)/~~~~~~~~~
+git clone git@github.com:minsnao/attendance_app.git
 
 ②該当フォルダにディレクトリ遷移  
-cd ~~~~~~~~/
+cd attendance_app/
 
-③ビルド
+③ビルド  
 docker-compose up -d --build  
 
 ④(コンテナ内)コンポーザDL  
