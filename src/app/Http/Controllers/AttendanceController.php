@@ -227,52 +227,6 @@ class AttendanceController extends Controller
         return redirect()->back();
     }
 
-    public function approveRequest($id)
-    {
-        $request = Attendance::with('attendance')->findOrFail($id);
-        $attendance = $request->attendance;
-
-        if ($request->requested_start_time) {
-            $attendance->start_time = $request->requested_start_time;
-        }
-        if ($request->requested_end_time) {
-            $attendance->end_time = $request->requested_end_time;
-        }
-
-        if ($request->requested_breaks) {
-            $breaks = json_decode($request->requested_breaks, true);
-
-            $attendance->breakTimes()->delete();
-
-            foreach ($breaks as $b) {
-                $attendance->breakTimes()->create([
-                    'start_time' => $b['start_time'],
-                    'end_time' => $b['end_time'],
-                ]);
-            }
-        }
-
-        $attendance->save();
-
-        $request->status = 'approved';
-        $request->save();
-
-        return response()->json([
-            'request_id' => $request->id,
-            'status' => $request->status,
-            'attendance' => [
-                'start_time' => $attendance->start_time ? $attendance->start_time->format('H:i') : null,
-                'end_time' => $attendance->end_time ? $attendance->end_time->format('H:i') : null,
-                'breaks' => $attendance->breakTimes->map(function($b) {
-                    return [
-                        'start_time' => $b->start_time ? $b->start_time->format('H:i') : null,
-                        'end_time' => $b->end_time ? $b->end_time->format('H:i') : null,
-                    ];
-                }),
-            ]
-        ]);
-    }
-
     public function myRequests()
     {
         $requests = AttendanceRequest::with('attendance', 'user')->where('user_id', auth()->id())->latest()->get();
